@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SImulador de préstamos</title>
+</head>
+<body> 
+    <div style="color:#0765c4;">PRESTAMOS.UY</a></div>
+
+    <h1>Calculadora de préstamos</h1>
+    <form id="loan-form">
+      <label for="amount">Monto del préstamo:</label>
+      <input type="number" id="amount" required>
+      <br>
+      <label for="interest">Tasa de interés (% mensual):</label>
+      <input type="number" id="interest" step="0.01" required>
+      <br>
+      <label for="years">Cantidad de cuotas (meses):</label>
+      <input type="number" id="years" required>
+      <br>
+      <button type="submit">Calcular</button>
+  </form>
+  <h2>Resultados</h2>
+  <div id="results">
+      <p>Monto de la cuota mensual: <span id="monthly-payment"></span></p>
+      <p>Total a pagar: <span id="total-payment"></span></p>
+      <p>Total de interés: <span id="total-interest"></span></p>
+  </div>
+   
+    <script src="./js/main.js"></script>
+</body>
+<footer>
+  <div id="copyright" class="clr" role="contentinfo">
+    Copyright © 2024 Ester Nuñez Comisión 59975</div>
+</footer>
+</html> 
+
+ 
+                             
+    
+   
