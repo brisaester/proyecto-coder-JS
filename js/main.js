@@ -45,4 +45,46 @@ function showMonthlyPayments(monthlyPayment, numberOfPayments) {
     for (let i = 1; i <= numberOfPayments; i++) {
         console.log(`Pago mensual para el mes ${i}: ${monthlyPayment.toFixed(2)}`);
     }
+} 
+class Prestamo {
+    constructor(id, monto, plazo) {
+        this.id = id;
+        this.monto = monto;
+        this.tasaInteres = 23; // Tasa de interés fija del 23%
+        this.plazo = plazo;
+    }
+
+    calcularCuotaMensual() {
+        let tasaMensual = this.tasaInteres / 12 / 100;
+        let cuota = this.monto * tasaMensual / (1 - Math.pow(1 + tasaMensual, -this.plazo));
+        return cuota.toFixed(2);
+    }
+}
+
+let prestamos = [
+    new Prestamo(1, 12000, 2),
+    new Prestamo(2, 20000, 12),
+    new Prestamo(3, 15000, 6),
+    new Prestamo(4, 25000, 12),
+];
+
+function buscarPrestamoPorId(id) {
+    return prestamos.find(prestamo => prestamo.id === id);
+}
+
+function filtrarPrestamosPorMonto(min, max) {
+    return prestamos.filter(prestamo => prestamo.monto >= min && prestamo.monto <= max);
+}
+
+// Buscar un préstamo por ID
+let prestamoBuscado = buscarPrestamoPorId(2);
+console.log(prestamoBuscado);
+
+// Filtrar préstamos por monto
+let prestamosFiltrados = filtrarPrestamosPorMonto(12000, 25000);
+console.log(prestamosFiltrados);
+
+// Calcular la cuota mensual de un préstamo específico
+if (prestamoBuscado) {
+    console.log(`Cuota mensual: $${prestamoBuscado.calcularCuotaMensual()}`);
 }
