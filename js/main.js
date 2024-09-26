@@ -55,8 +55,8 @@ class Prestamo {
     }
 
     calcularCuotaMensual() {
-        let tasaMensual = this.tasaInteres / 12 / 100;
-        let cuota = this.monto * tasaMensual / (1 - Math.pow(1 + tasaMensual, -this.plazo));
+        const tasaMensual = this.tasaInteres / 12 / 100;
+        const cuota = this.monto * tasaMensual / (1 - Math.pow(1 + tasaMensual, -this.plazo));
         return cuota.toFixed(2);
     }
 }
@@ -68,23 +68,78 @@ let prestamos = [
     new Prestamo(4, 25000, 12),
 ];
 
-function buscarPrestamoPorId(id) {
-    return prestamos.find(prestamo => prestamo.id === id);
-}
+// Guardar préstamos en el localStorage
+const guardarPrestamosEnStorage = () => {
+    localStorage.setItem('prestamos', JSON.stringify(prestamos));
+};
 
-function filtrarPrestamosPorMonto(min, max) {
-    return prestamos.filter(prestamo => prestamo.monto >= min && prestamo.monto <= max);
-}
+// Cargar préstamos desde el localStorage
+const cargarPrestamosDeStorage = () => {
+    const prestamosGuardados = localStorage.getItem('prestamos');
+    if (prestamosGuardados) {
+        prestamos = JSON.parse(prestamosGuardados).map(({ id, monto, plazo }) => new Prestamo(id, monto, plazo));
+    }
+};
 
-// Buscar un préstamo por ID
-let prestamoBuscado = buscarPrestamoPorId(2);
-console.log(prestamoBuscado);
+// Buscar préstamo por ID
+const buscarPrestamoPorId = id => prestamos.find(prestamo => prestamo.id === id);
 
 // Filtrar préstamos por monto
-let prestamosFiltrados = filtrarPrestamosPorMonto(12000, 25000);
-console.log(prestamosFiltrados);
+const filtrarPrestamosPorMonto = (min, max) => 
+    prestamos.filter(prestamo => prestamo.monto >= min && prestamo.monto <= max);
 
-// Calcular la cuota mensual de un préstamo específico
-if (prestamoBuscado) {
-    console.log(`Cuota mensual: $${prestamoBuscado.calcularCuotaMensual()}`);
+// Inicializa y carga los préstamos
+guardarPrestamosEnStorage();
+cargarPrestamosDeStorage(); // Llama a la función aquí
+
+// Eventos
+document.getElementById('buscarPrestamo').addEventListener('click', () => {
+    const id = parseInt(document.getElementById('prestamoId').value);
+    if (!isNaN(id)) {
+        const prestamoBuscado = buscarPrestamoPorId(id);
+        if (prestamoBuscado) {
+            console.log(prestamoBuscado);
+            console.log(`Cuota mensual: $${prestamoBuscado.calcularCuotaMensual()}`);
+        } else {
+            console.log('Préstamo no encontrado');
+        }
+    } else {
+        console.log('ID inválido');
+    }
+});
+
+document.getElementById('filtrarPrestamos').addEventListener('click', () => {
+    const min = parseFloat(document.getElementById('montoMin').value);
+    const max = parseFloat(document.getElementById('montoMax').value);
+    
+    if (!isNaN(min) && !isNaN(max) && min >= 0 && max >= 0) {
+        if (min > max) {
+            console.log('Monto mínimo no puede ser mayor que el monto máximo');
+        } else {
+            const prestamosFiltrados = filtrarPrestamosPorMonto(min, max);
+            console.log(prestamosFiltrados);
+        }
+    } else {
+        console.log('Monto mínimo o máximo inválido');
+    }
+});
+// DOM mensaje de éxito
+function mostrarMensajeExito(mensaje) {
+    const mensajeElemento = document.createElement('div');
+    mensajeElemento.textContent = mensaje;
+    mensajeElemento.style.color = 'green';
+    document.body.appendChild(mensajeElemento);
 }
+
+
+document.getElementById('loan-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+
+    if (amount > 10000) {
+        // Lógica de cálculo
+        mostrarMensajeExito('Cálculo realizado con éxito!');
+    } else {
+        alert('El monto del préstamo debe ser mayor a 10,000.');
+    }
+});
