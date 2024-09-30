@@ -20,7 +20,7 @@ document.getElementById('loan-form').addEventListener('submit', function(e) {
             document.getElementById('total-payment').textContent = totalPayment.toFixed(2);
             document.getElementById('total-interest').textContent = totalInterest.toFixed(2);
 
-            // Mostrar mensaje de éxito
+            // Mostrar mensaje de éxito Cuando el cálculo se realiza correctamente, se llama a la función mostrarMensajeExito, que manipula el DOM para mostrar un mensaje de éxito:
             mostrarMensajeExito('Cálculo realizado con éxito!');
         } else {
             alert('Por favor, revisa los valores ingresados');
@@ -39,7 +39,7 @@ function calculateMonthlyPayment(amount, monthlyInterestRate, numberOfPayments) 
     return (amount * monthlyInterestRate * x) / (x - 1);
 }
 
-// Función para mostrar mensajes de éxito
+// Función para mostrar mensajes de éxito 
 function mostrarMensajeExito(mensaje) {
     const mensajeElemento = document.getElementById('message');
     mensajeElemento.textContent = mensaje;
@@ -90,7 +90,7 @@ const filtrarPrestamosPorMonto = (min, max) =>
 
 // Inicializa y carga los préstamos
 guardarPrestamosEnStorage();
-cargarPrestamosDeStorage(); // Llama a la función aquí
+cargarPrestamosDeStorage(); 
 
 // Eventos para buscar préstamo
 document.getElementById('buscarPrestamo').addEventListener('click', () => {
