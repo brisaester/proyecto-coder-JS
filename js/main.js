@@ -1,16 +1,15 @@
 document.getElementById('loan-form').addEventListener('submit', function(e) {
-    e.preventDefault(); // Evita que el formulario se envíe de la manera tradicional
+    e.preventDefault(); 
 
     // Obtener valores del formulario
     const amount = parseFloat(document.getElementById('amount').value);
     const annualInterestRate = parseFloat(document.getElementById('interest').value) / 100; // Tasa de interés anual en formato decimal
-    const monthlyInterestRate = annualInterestRate / 12; // Convertir tasa anual a mensual
     const numberOfPayments = parseInt(document.getElementById('years').value); // Cantidad de cuotas (meses)
 
     // Verificar si el monto del préstamo es mayor a 10000
     if (amount > 10000) {
         // Calcular pagos mensuales
-        const monthlyPayment = calculateMonthlyPayment(amount, monthlyInterestRate, numberOfPayments);
+        const monthlyPayment = calculateMonthlyPayment(amount, annualInterestRate / 12, numberOfPayments);
 
         // Mostrar resultados
         if (isFinite(monthlyPayment)) {
@@ -20,7 +19,7 @@ document.getElementById('loan-form').addEventListener('submit', function(e) {
             document.getElementById('total-payment').textContent = totalPayment.toFixed(2);
             document.getElementById('total-interest').textContent = totalInterest.toFixed(2);
 
-            // Mostrar mensaje de éxito Cuando el cálculo se realiza correctamente, se llama a la función mostrarMensajeExito, que manipula el DOM para mostrar un mensaje de éxito:
+            // Mostrar mensaje de éxito
             mostrarMensajeExito('Cálculo realizado con éxito!');
         } else {
             alert('Por favor, revisa los valores ingresados');
@@ -60,13 +59,26 @@ class Prestamo {
         return cuota.toFixed(2);
     }
 }
+let prestamos = [];
 
-let prestamos = [
-    new Prestamo(1, 12000, 2),
-    new Prestamo(2, 20000, 12),
-    new Prestamo(3, 15000, 6),
-    new Prestamo(4, 25000, 12),
-];
+// Función para cargar préstamos desde un archivo JSON local
+const cargarPrestamosDesdeJSON = async () => {
+    try {
+        const response = await fetch('prestamos.json'); // Asegúrate de que la ruta sea correcta
+        if (!response.ok) {
+            throw new Error('Error al cargar los préstamos');
+        }
+        const data = await response.json();
+        
+        // Asumimos que la estructura del JSON es adecuada
+        prestamos = data.map(({ id, monto, plazo }) => new Prestamo(id, monto, plazo));
+        
+        // Guardar préstamos en localStorage
+        guardarPrestamosEnStorage();
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
 
 // Guardar préstamos en el localStorage
 const guardarPrestamosEnStorage = () => {
@@ -88,8 +100,14 @@ const buscarPrestamoPorId = id => prestamos.find(prestamo => prestamo.id === id)
 const filtrarPrestamosPorMonto = (min, max) => 
     prestamos.filter(prestamo => prestamo.monto >= min && prestamo.monto <= max);
 
-// Inicializa y carga los préstamos
-guardarPrestamosEnStorage();
+// Inicializa y carga los préstamos desde el JSON
+cargarPrestamosDesdeJSON().then(() => {
+    console.log('Préstamos cargados desde JSON y guardados en localStorage');
+}).catch(error => {
+    console.error('Error al cargar préstamos desde JSON:', error);
+});
+
+// Cargar préstamos desde localStorage al iniciar
 cargarPrestamosDeStorage(); 
 
 // Eventos para buscar préstamo
@@ -123,4 +141,17 @@ document.getElementById('filtrarPrestamos').addEventListener('click', () => {
     } else {
         console.log('Monto mínimo o máximo inválido');
     }
+});
+
+// Librería, activa al hacer click en calcular
+document.getElementById("calcularBtn").addEventListener("click", function() {
+    Toastify({
+        text: "PROMOCIÓN! Obtén tu préstamo ahora y recibe una entrada para ver Deadpool",
+        duration: 6000,
+        gravity: "top", 
+        position: "center",
+        style: {
+            background: "green"
+        }
+    }).showToast(); 
 });
