@@ -61,16 +61,16 @@ class Prestamo {
 }
 let prestamos = [];
 
-// Función para cargar préstamos desde un archivo JSON local
+// Función para cargar préstamos desde MI archivo JSON local PRESTAMOS.JSON
 const cargarPrestamosDesdeJSON = async () => {
     try {
-        const response = await fetch('prestamos.json'); // Asegúrate de que la ruta sea correcta
+        const response = await fetch('prestamos.json'); //mi achivo local prestamos.json para usar FETCH.
         if (!response.ok) {
             throw new Error('Error al cargar los préstamos');
         }
         const data = await response.json();
         
-        // Asumimos que la estructura del JSON es adecuada
+        // USANDO ESTRUCTURA DE PRESTAMOS.JSON
         prestamos = data.map(({ id, monto, plazo }) => new Prestamo(id, monto, plazo));
         
         // Guardar préstamos en localStorage
